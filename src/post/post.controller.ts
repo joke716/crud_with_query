@@ -6,13 +6,19 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { FindOneParams } from '../utils/findOneParams';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import JwtAuthGuard from '../auth/guards/jwt-auth.guard';
+import { RequestWithUser } from '../common/interfaces/requestWithUser.interface';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('post')
+@ApiTags('Post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
@@ -22,8 +28,13 @@ export class PostController {
   }
 
   @Post()
-  async createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.createPost(createPostDto);
+  @UseGuards(JwtAuthGuard)
+  async createPost(
+    @Body() createPostDto: CreatePostDto,
+    @Req() req: RequestWithUser,
+  ) {
+    const { user } = req;
+    return this.postService.createPost(createPostDto, user);
   }
 
   @Get(':id')

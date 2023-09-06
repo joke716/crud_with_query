@@ -1,10 +1,11 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CommonEntity } from '../../common/entities/common.entity';
 import { Exclude } from 'class-transformer';
 import { Role } from './role.enum';
 import { InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import * as gravatar from 'gravatar';
+import { Post } from '../../post/entities/post.entity';
 
 @Entity()
 export class User extends CommonEntity {
@@ -31,6 +32,9 @@ export class User extends CommonEntity {
     default: [Role.USER],
   })
   public roles: Role[];
+
+  @OneToMany(() => Post, (post: Post) => post.author)
+  public posts: Post[];
 
   @BeforeInsert()
   @BeforeUpdate()
