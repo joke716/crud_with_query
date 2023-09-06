@@ -15,7 +15,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import JwtAuthGuard from '../auth/guards/jwt-auth.guard';
 import { RequestWithUser } from '../common/interfaces/requestWithUser.interface';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('post')
 @ApiTags('Post')
@@ -37,11 +37,19 @@ export class PostController {
     return this.postService.createPost(createPostDto, user);
   }
 
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
   @Get(':id')
   getPostById(@Param() { id }: FindOneParams) {
     return this.postService.getPostById(id);
   }
 
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
   @Patch(':id')
   async updatePost(
     @Param() { id }: FindOneParams,
@@ -50,6 +58,10 @@ export class PostController {
     return this.postService.updatePost(id, post);
   }
 
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
   @Delete(':id')
   async deletePost(@Param() { id }: FindOneParams) {
     return this.postService.deletePost(id);

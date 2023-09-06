@@ -13,7 +13,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from '../common/interfaces/requestWithUser.interface';
 import JwtAuthGuard from './guards/jwt-auth.guard';
 import { User } from '../user/entities/user.entity';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { EmailDto } from '../common/dtos/email.dto';
 import { VerifyEmailDto } from '../common/dtos/verifyEmail.dto';
 import { LoggedInUserDto } from '../user/dto/loggedIn-user.dto';
@@ -55,6 +55,7 @@ export class AuthController {
     return await this.authService.confirmEmailVerification(email, code);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
   authenticate(@Req() req: RequestWithUser) {
